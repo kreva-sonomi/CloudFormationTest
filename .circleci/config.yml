@@ -5,9 +5,6 @@ orbs:
 workflows: 
   build-and-deploy: 
     jobs: 
-      filters: 
-      branches: 
-      only: none
       - aws-ecr/build-and-push-image: 
           account-url: AWS_ECR_ACCOUNT_URL
           repo: '${MY_APP_PREFIX}'
@@ -15,7 +12,10 @@ workflows:
           tag: '${CIRCLE_SHA1}' 
       - aws-ecs/deploy-service-update:
           requires:
-            - aws-ecr/build-and-push-image       
+            - aws-ecr/build-and-push-image
+      filters: 
+      branches: 
+      only: none
           aws-region: ${AWS_DEFAULT_REGION}
           family: 'task02' # ECSのタスク定義名
           cluster-name: 'ntect' # ECSクラスター名
