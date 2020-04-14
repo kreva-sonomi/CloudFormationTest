@@ -13,6 +13,10 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image
+          filters: 
+          branches: 
+          only: master
+          
           aws-region: ${AWS_DEFAULT_REGION}
           family: 'task02' # ECSのタスク定義名
           cluster-name: 'ntect' # ECSクラスター名
