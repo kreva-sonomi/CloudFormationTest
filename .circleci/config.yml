@@ -11,14 +11,14 @@ workflows:
               only:  # 下記の正規表現フィルターにマッチするブランチのみが実行される
                 - /master/
           account-url: AWS_ECR_ACCOUNT_URL
-          repo: '${MY_APP_PREFIX}'
+          repo: app01
           region: AWS_REGION
           tag: '${CIRCLE_SHA1}' 
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image
           aws-region: ${AWS_DEFAULT_REGION}
-          family: 'task02' # ECSのタスク定義名
+          family: 'task01' # ECSのタスク定義名
           cluster-name: 'ntect' # ECSクラスター名
-          service-name: 'service03' # ECSのサービス名
-          container-image-name-updates: 'container=${MY_APP_PREFIX},tag=${CIRCLE_SHA1}'
+          service-name: 'service01' # ECSのサービス名
+          container-image-name-updates: 'container=app01,tag=${CIRCLE_SHA1}'
