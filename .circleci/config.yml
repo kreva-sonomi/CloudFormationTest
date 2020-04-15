@@ -11,7 +11,7 @@ workflows:
               only:  # 下記の正規表現フィルターにマッチするブランチのみが実行される
                 - /master/
           account-url: AWS_ECR_ACCOUNT_URL
-          repo: app01
+          repo: test
           region: AWS_REGION
           tag: '${CIRCLE_SHA1}' 
       - aws-ecs/deploy-service-update:
