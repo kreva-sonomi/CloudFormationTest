@@ -19,6 +19,6 @@ workflows:
             - aws-ecr/build-and-push-image
           aws-region: ${AWS_DEFAULT_REGION}
           family: 'task01' # ECSのタスク定義名
-          cluster-name: 'ntect' # ECSクラスター名
+          cluster-name: 'DockerAutoDeploy' # ECSクラスター名
           service-name: 'service01' # ECSのサービス名
           container-image-name-updates: 'container=app01,tag=${CIRCLE_SHA1}'
