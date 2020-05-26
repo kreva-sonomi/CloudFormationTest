@@ -3,7 +3,7 @@ orbs:
   aws-ecr: circleci/aws-ecr@6.8.2
   aws-ecs: circleci/aws-ecs@1.1.0
 workflows: 
-  build-and-deploy: 
+  build-and-deploy:  # ブランチ「master」でのみ実行するワークフロー
     jobs: 
       - aws-ecr/build-and-push-image: 
           filters:  # ブランチ全体にマッチさせる正規表現フィルターを使う
@@ -22,3 +22,24 @@ workflows:
           cluster-name: 'DockerAutoDeploy' # ECSクラスター名
           service-name: 'service01' # ECSのサービス名
           container-image-name-updates: 'container=app01,tag=${CIRCLE_SHA1}'
+          
+  build-and-deploy-dev: # ブランチ「develop」でのみ実行するワークフロー
+    jobs: 
+      - aws-ecr/build-and-push-image: 
+          filters:  # ブランチ全体にマッチさせる正規表現フィルターを使う
+            branches:
+              only:  # 下記の正規表現フィルターにマッチするブランチのみが実行される
+                - /develop/
+          account-url: AWS_ECR_ACCOUNT_URL
+          repo: app01-dev
+          region: AWS_REGION
+          tag: '${CIRCLE_SHA1}' 
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image
+          aws-region: ${AWS_DEFAULT_REGION}
+          family: 'task01-dev' # ECSのタスク定義名
+          cluster-name: 'DockerAutoDeploy-dev' # ECSクラスター名
+          service-name: 'service01-dev' # ECSのサービス名
+          container-image-name-updates: 'container=app01-dev,tag=${CIRCLE_SHA1}'
+
